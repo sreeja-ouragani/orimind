@@ -166,9 +166,10 @@ gradient.addColorStop(1, "rgba(180,180,255,0.1)");     // subtle soft blue outer
               <div className="bg-white/90 backdrop-blur-md rounded-full p-3 shadow-md border border-gray-200">
                 {item.icon}
               </div>
-              <p className="text-xs text-gray-700 mt-1 font-medium">
-                {item.label}
-              </p>
+              <p className="text-xs md:text-sm text-gray-700 mt-1 font-bold font-sans">
+  {item.label}
+</p>
+
             </motion.div>
           </motion.div>
         );
