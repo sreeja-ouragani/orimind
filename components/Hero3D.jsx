@@ -88,23 +88,41 @@ export default function Hero3D() {
       <div ref={mountRef} className="h-[480px] w-[480px] md:h-[580px] md:w-[580px] relative" />
 
       {/* Orbiting icons (reduced radius) */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
-      >
-        {icons.map((item, index) => {
-          const angle = (index / icons.length) * Math.PI * 2;
-          const radius = 180; // CLOSE TO SPHERE ✔
+      {icons.map((item, index) => {
+        const angle = (index / icons.length) * Math.PI * 2;
+        const radius = 180;
 
-          const x = radius * Math.cos(angle);
-          const y = radius * Math.sin(angle);
-
-          return (
-            <div
-              key={index}
-              className="absolute flex flex-col items-center"
-              style={{ transform: `translate(${x}px, ${y}px)` }}
+        return (
+          <motion.div
+            key={index}
+            className="absolute top-1/2 left-1/2"
+            style={{
+              x: -24,
+              y: -90,
+            }}
+            animate={{
+              rotate: 360,
+            }}
+            transition={{
+              duration: 16,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          >
+            <motion.div
+              className="flex flex-col items-center"
+              style={{
+                x: radius * Math.cos(angle),
+                y: radius * Math.sin(angle),
+              }}
+              animate={{
+                rotate: -360,
+              }}
+              transition={{
+                duration: 16,
+                repeat: Infinity,
+                ease: "linear",
+              }}
             >
               <div className="bg-white/90 backdrop-blur-md rounded-full p-3 shadow-md border border-gray-200">
                 {item.icon}
@@ -112,10 +130,10 @@ export default function Hero3D() {
               <p className="text-xs text-gray-700 mt-1 font-medium">
                 {item.label}
               </p>
-            </div>
-          );
-        })}
-      </motion.div>
+            </motion.div>
+          </motion.div>
+        );
+      })}
 
       {/* Text Section */}
       <div className="text-center mt-16 px-4">
