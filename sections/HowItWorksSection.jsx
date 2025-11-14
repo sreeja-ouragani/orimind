@@ -91,14 +91,44 @@ const HowItWorksSection = () => {
             width: 100%; /* Ensure the section itself spans full width */
         }
 
+        /* Title Wrapper for the background shine */
+        .title-wrapper {
+            position: relative;
+            z-index: 10;
+            margin-bottom: 60px; /* This sets the spacing below the title */
+            display: inline-block;
+        }
+
+        /* Pseudo-element for the background shine */
+        .title-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -30px;
+            right: -30px;
+            bottom: -15px;
+            z-index: 5; /* Behind the h2 */
+            
+            /* Radial Gradient Glow Effect (Light Blue/White) */
+            background: radial-gradient(circle at center, 
+                                        rgba(173, 216, 230, 0.5) 0%, /* Light blue */
+                                        rgba(0, 0, 0, 0) 70%);
+            filter: blur(20px); /* Blur the gradient heavily */
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+
         /* SECTION TITLE */
         .how-title {
             font-size: 3rem;
             font-weight: 800;
             color: #fff; 
             text-align: center;
-            margin-bottom: 60px;
-            z-index: 10;
+            /* Margin is now handled by .title-wrapper */
+            z-index: 10; 
+            position: relative; /* Ensure the text stays above the ::before glow */
         }
 
         /* Large Central Glass Container (The main canvas) */
@@ -119,9 +149,9 @@ const HowItWorksSection = () => {
 
             /* The core gradient background inside the glass container */
             background-image: radial-gradient(circle at 50% 50%, 
-                                              rgba(173, 216, 230, 0.1) 0%, 
-                                              rgba(0, 0, 0, 0.3) 30%, 
-                                              rgba(0, 0, 0, 0.5) 100%);
+                                             rgba(173, 216, 230, 0.1) 0%, 
+                                             rgba(0, 0, 0, 0.3) 30%, 
+                                             rgba(0, 0, 0, 0.5) 100%);
             z-index: 5; /* Ensure container is above stars */
         }
 
@@ -226,9 +256,9 @@ const HowItWorksSection = () => {
         /* Responsive adjustments: Center all steps on mobile */
         @media (max-width: 900px) { /* Adjust breakpoint for the new wider design */
              .step-left, .step-right {
-                left: 50%;
-                right: auto;
-                transform: translateX(-50%);
+                 left: 50%;
+                 right: auto;
+                 transform: translateX(-50%);
             }
             .flow-step {
                 width: 70%; 
@@ -277,8 +307,11 @@ const HowItWorksSection = () => {
             {/* The Star Field for the night sky effect */}
             <div className="stars"></div>
 
-            {/* Title */}
-            <h2 className="how-title">How It Works</h2>
+            {/* Title with Shine Wrapper */}
+            <div className="title-wrapper">
+                <h2 className="how-title">How It Works</h2>
+            </div>
+
 
             {/* Main Glass Container */}
             <motion.div 
