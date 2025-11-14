@@ -3,39 +3,40 @@
 import React from "react";
 import Image from "next/image";
 import { Linkedin, Twitter } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function VisionarySection() {
   return (
     <section
       className="relative w-full flex justify-center items-center py-28 bg-white overflow-hidden mt-20"
     >
-      {/* FIXED SQUARE BOX */}
       <div
         className="relative bg-white rounded-[40px] p-12 shadow-2xl
         w-[950px] h-[520px] flex flex-row justify-between items-center z-[5]"
       >
         {/* LEFT TEXT */}
-        <div className="flex flex-col justify-center w-[450px] pl-4">
-
-          {/* Title */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: "easeOut" }}
+          viewport={{ once: true }}
+          className="flex flex-col justify-center w-[450px] pl-4"
+        >
           <h2 className="text-[30px] font-black leading-snug text-black mb-4">
             Meet the Visionary<br />Mind Behind OriMind
           </h2>
 
-          {/* Body */}
           <p className="text-[15px] leading-7 text-[#444] mb-5">
-            <span className="font-semibold">Sreeja</span> is a tech innovator passionate
+            <span className="font-semibold">Ganesh Nayak</span> is a tech innovator passionate
             about creating systems that let AI execute <span className="font-semibold">imagination</span>.
             With expertise in AI, ML, and automation, she founded OriMind to build a world
             where machines act on intent — not just instructions.
           </p>
 
-          {/* Quote */}
           <p className="italic text-[#666] text-[14px] mb-8">
             “The future of AI isn’t about prompts — it’s about purpose and execution.”
           </p>
 
-          {/* FOLLOW */}
           <div className="flex items-center gap-4 mt-2">
             <span className="text-[15px] font-semibold text-black flex items-center gap-1">
               Follow Journey →
@@ -55,11 +56,16 @@ export default function VisionarySection() {
               <Twitter size={18} />
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* RIGHT IMAGE */}
-        <div className="relative flex-shrink-0 pr-2">
-
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.1, ease: "easeOut" }}
+          viewport={{ once: true }}
+          className="relative flex-shrink-0 pr-2"
+        >
           {/* Glow */}
           <div
             className="absolute inset-0 w-[380px] h-[460px] -top-4 -right-4
@@ -72,9 +78,10 @@ export default function VisionarySection() {
             alt="Visionary"
             width={350}
             height={430}
-            className="relative z-[2] rounded-[25px] object-cover border border-[#e2e2e2]"
+            className="relative z-[2] rounded-[25px] object-cover border border-[#e2e2e2]
+            filter grayscale contrast-125 brightness-95"
           />
-        </div>
+        </motion.div>
       </div>
     </section>
   );
