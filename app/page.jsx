@@ -2,6 +2,7 @@
 
 import Hero3D from "../components/Hero3D";
 import BuildingBlocksSection from "../sections/BuildingBlocksSection";
+import HowItWorksSection from "../sections/HowItWorksSection";
 import "../styles/animations.css";
 
 export default function Home() {
@@ -12,6 +13,9 @@ export default function Home() {
 
       {/* Building Blocks Section */}
       <BuildingBlocksSection />
+
+      {/* How It Works Section */}
+      <HowItWorksSection />
     </main>
   );
 }
