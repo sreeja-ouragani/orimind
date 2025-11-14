@@ -49,8 +49,8 @@ const HowItWorksSection = () => {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 3000px; /* Increased width to handle continuous movement without gaps */
+            height: 3000px; /* Increased height */
             background: transparent;
             /* Generating subtle star-like dots using box-shadow */
             box-shadow: 
@@ -63,15 +63,18 @@ const HowItWorksSection = () => {
                 750px 400px 2px rgba(255, 255, 255, 0.9),
                 900px 200px 1px #fff,
                 1050px 50px 1px rgba(255, 255, 255, 0.6),
-                1200px 350px 2px #fff;
+                1200px 350px 2px #fff,
+                1500px 800px 1px #fff,
+                1800px 1200px 2px rgba(255, 255, 255, 0.7),
+                2200px 600px 1px #fff;
             animation: stars-move 300s linear infinite;
             z-index: 1;
         }
 
-        /* Keyframes for subtle star movement */
+        /* Keyframes for subtle star movement (Removed scale/translate that caused the issue) */
         @keyframes stars-move {
             from { transform: translate(0, 0); }
-            to { transform: translate(-1000px, 500px); }
+            to { transform: translate(-2000px, 1500px); } /* Increased translation for slower, wider movement */
         }
 
         /* Main Section Background: Black with space feel */
