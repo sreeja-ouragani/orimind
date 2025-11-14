@@ -2,57 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Base theme */
-:root {
-  color-scheme: light;
-}
-
-html, body, #root {
-  height: 100%;
-}
-
 body {
-  background-color: #fff; /* White background */
-  color: #000; /* Black text */
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
+  font-family: 'Inter', sans-serif;
+  background: #ffffff;
+  color: #000000;
+  overflow-x: hidden;
 }
 
-/* Typography feel */
-h1, h2, h3 {
-  color: #000; /* headings black */
-  font-family: "Georgia", serif;
+::selection {
+  background: #9400d3;
+  color: white;
 }
 
-/* Gradient highlight for emphasis */
-.bg-gradient-text {
-  background: linear-gradient(90deg, #000 0%, #444 50%, #777 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.typing-text {
+  width: fit-content;
+  margin: 0 auto;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #000;
+  animation: typing 4s steps(30) infinite alternate;
 }
 
-/* Buttons */
-.btn-primary {
-  background-color: #000; /* primary black button */
-  color: #fff;
-  padding: 0.6rem 1.4rem;
-  border-radius: 9999px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-.btn-primary:hover {
-  transform: scale(1.05);
-  background-color: #111;
-}
-
-.btn-ghost {
-  border: 1px solid rgba(0,0,0,0.3);
-  color: #000;
-  padding: 0.6rem 1.3rem;
-  border-radius: 9999px;
-  transition: background-color 0.2s ease;
-}
-.btn-ghost:hover {
-  background-color: rgba(0,0,0,0.05);
+@keyframes typing {
+  0% { width: 0; }
+  50% { width: 100%; }
+  100% { width: 0; }
 }

@@ -1,95 +1,137 @@
 "use client";
-import React from "react";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Icosahedron, MeshDistortMaterial } from "@react-three/drei";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import entrepreneurPic from "../public/ennn.jpeg"; // your entrepreneur pic
 
-function FloatingSphere() {
-  return (
-    <Icosahedron args={[1.6, 2]}>
-      <MeshDistortMaterial
-        color="#000" // black sphere for white theme
-        speed={1.2}
-        distort={0.25}
-        metalness={0.9}
-        roughness={0.1}
-      />
-    </Icosahedron>
-  );
-}
+import React, { useRef, useEffect } from "react";
+import * as THREE from "three";
+import { motion } from "framer-motion";
+import { Code2, Cpu, PenTool, Rocket } from "lucide-react";
+
+const icons = [
+  { icon: <Cpu size={28} />, label: "Research" },
+  { icon: <PenTool size={28} />, label: "Design" },
+  { icon: <Code2 size={28} />, label: "Code" },
+  { icon: <Rocket size={28} />, label: "Deploy" },
+];
 
 export default function Hero3D() {
+  const mountRef = useRef(null);
+
+  useEffect(() => {
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      mountRef.current.clientWidth / mountRef.current.clientHeight,
+      0.1,
+      1000
+    );
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(
+      mountRef.current.clientWidth,
+      mountRef.current.clientHeight
+    );
+    mountRef.current.appendChild(renderer.domElement);
+
+    const geometry = new THREE.SphereGeometry(2.5, 64, 64);
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x000000,
+      roughness: 0.15,
+      metalness: 0.9,
+    });
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+
+    // Vibrant cyan + violet glow behind orb
+    const light1 = new THREE.PointLight(0x00ffff, 3);
+    const light2 = new THREE.PointLight(0x9400d3, 3);
+    light1.position.set(5, 4, 5);
+    light2.position.set(-5, -4, 5);
+    scene.add(light1, light2);
+
+    camera.position.z = 7;
+
+    const animate = () => {
+      sphere.rotation.y += 0.004;
+      sphere.rotation.x += 0.002;
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    };
+    animate();
+
+    const resizeHandler = () => {
+      camera.aspect =
+        mountRef.current.clientWidth / mountRef.current.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(
+        mountRef.current.clientWidth,
+        mountRef.current.clientHeight
+      );
+    };
+    window.addEventListener("resize", resizeHandler);
+
+    return () => {
+      window.removeEventListener("resize", resizeHandler);
+      mountRef.current.removeChild(renderer.domElement);
+    };
+  }, []);
+
   return (
-    <section className="relative flex flex-col md:flex-row justify-center items-center min-h-screen text-center overflow-hidden bg-white">
-      
-      {/* Left: Hero Text + Animated Circle */}
-      <div className="flex-1 flex flex-col items-start justify-center relative z-10 px-6 md:px-16">
-        {/* Animated circle behind text */}
-        <motion.div
-          className="absolute w-64 h-64 border-2 border-black rounded-full top-20 md:top-24 left-0 md:left-10"
-          animate={{ scale: [1, 1.05, 1], opacity: [0.7,1,0.7] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        />
+    <div className="relative flex flex-col items-center justify-center w-full py-20">
 
-        <motion.h1
-          className="text-5xl md:text-6xl font-bold mb-4 leading-tight"
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: "easeOut" }}
-        >
-          One command.<br />
-          <span className="bg-gradient-text text-transparent bg-clip-text">
-            Results delivered.
-          </span>
-        </motion.h1>
+      {/* Background dot grid */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#e5e7eb_1px,transparent_0)] [background-size:22px_22px] opacity-40 -z-10" />
 
-        <motion.p
-          className="text-gray-800 text-lg md:text-xl mb-10 max-w-2xl"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 1 }}
-        >
-          Autonomous AI that researches, builds, and ships — end-to-end execution for startups.
-        </motion.p>
+      {/* Colored glow behind orb */}
+      <div className="absolute w-[680px] h-[680px] rounded-full bg-gradient-to-r from-cyan-400/40 via-white/5 to-violet-400/40 blur-[180px] -z-20" />
 
-        <div className="flex justify-start gap-4">
-          <a href="#waitlist" className="btn-primary">Join Waitlist</a>
-          <a href="#how" className="btn-ghost">How it works</a>
-        </div>
+      {/* 3D orb */}
+      <div ref={mountRef} className="h-[480px] w-[480px] md:h-[580px] md:w-[580px] relative" />
+
+      {/* Orbiting icons (reduced radius) */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
+      >
+        {icons.map((item, index) => {
+          const angle = (index / icons.length) * Math.PI * 2;
+          const radius = 180; // CLOSE TO SPHERE ✔
+
+          const x = radius * Math.cos(angle);
+          const y = radius * Math.sin(angle);
+
+          return (
+            <div
+              key={index}
+              className="absolute flex flex-col items-center"
+              style={{ transform: `translate(${x}px, ${y}px)` }}
+            >
+              <div className="bg-white/90 backdrop-blur-md rounded-full p-3 shadow-md border border-gray-200">
+                {item.icon}
+              </div>
+              <p className="text-xs text-gray-700 mt-1 font-medium">
+                {item.label}
+              </p>
+            </div>
+          );
+        })}
+      </motion.div>
+
+      {/* Text Section */}
+      <div className="text-center mt-16 px-4">
+        <h1 className="text-5xl md:text-6xl font-extrabold text-black">
+          ORIMIND
+        </h1>
+
+        <p className="text-gray-700 mt-3 text-xl md:text-2xl">
+          One Command. Infinite Execution.
+        </p>
+
+        {/* Typewriter Animation */}
+        <p className="mt-4 text-lg md:text-xl font-medium typing-text">
+          Where Ideas Build Themselves.
+        </p>
       </div>
-
-      {/* Right: Entrepreneur Picture + 3D Sphere */}
-      <div className="flex-1 relative w-full max-w-md mt-10 md:mt-0">
-        {/* Entrepreneur pic */}
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1, duration: 1 }}
-        >
-          <Image
-            src={entrepreneurPic}
-            alt="Entrepreneur"
-            className="rounded-2xl shadow-xl"
-          />
-        </motion.div>
-
-        {/* 3D Sphere behind picture for depth */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          className="absolute -bottom-10 right-0 w-[250px] h-[250px] md:w-[350px] md:h-[350px]"
-        >
-          <Canvas camera={{ position: [0, 0, 4], fov: 50 }} dpr={[1,1.5]}>
-            <ambientLight intensity={0.6} />
-            <directionalLight intensity={1.2} position={[3, 2, 5]} />
-            <FloatingSphere />
-            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
-          </Canvas>
-        </motion.div>
-      </div>
-    </section>
+    </div>
   );
 }
