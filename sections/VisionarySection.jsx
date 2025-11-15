@@ -16,12 +16,12 @@ export default function VisionarySection() {
         {/* LEFT TEXT */}
         <div className="flex flex-col justify-center w-[450px] pl-4">
           
-          {/* BIG BOLD TITLE (Italic + Bold) */}
+          {/* BIG BOLD TITLE */}
           <h2 className="text-[42px] font-extrabold italic leading-tight text-black mb-6 font-poppins">
             Meet the Visionary Mind Behind - OriMind
           </h2>
 
-          {/* BODY TEXT (Italic) */}
+          {/* BODY TEXT */}
           <p className="text-[18px] leading-7 text-[#444] mb-6 font-medium italic">
             Ganesh Nayak is a tech innovator passionate about creating systems 
             that let AI execute imagination. With expertise in AI, ML, and automation, 
@@ -81,16 +81,16 @@ export default function VisionarySection() {
             bg-[radial-gradient(circle_at_center,rgba(0,255,255,0.25),rgba(138,43,226,0.25),transparent_70%)]"
           ></div>
 
-          {/* PHOTO */}
+          {/* PHOTO — NOW BLACK AND WHITE */}
           <Image
             src="/images/ennn.jpeg"
             alt="Visionary"
             width={350}
             height={430}
-            className="relative z-[2] rounded-[25px] object-cover border border-[#e2e2e2]"
+            className="relative z-[2] rounded-[25px] object-cover border border-[#e2e2e2] grayscale"
           />
 
-          {/* NAME + ROLE */}
+          {/* NAME */}
           <p className="mt-4 text-[18px] text-black font-semibold text-center">
             <b>Ganesh Nayak, Founder & CEO - OriMind</b>
           </p>

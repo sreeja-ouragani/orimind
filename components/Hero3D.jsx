@@ -15,6 +15,7 @@ const icons = [
 export default function Hero3D() {
   const mountRef = useRef(null);
 
+  /* ---------------- THREE JS SETUP ---------------- */
   useEffect(() => {
     const scene = new THREE.Scene();
 
@@ -32,7 +33,6 @@ export default function Hero3D() {
     );
     mountRef.current.appendChild(renderer.domElement);
 
-    // Black glossy sphere
     const geometry = new THREE.SphereGeometry(2.5, 64, 64);
     const material = new THREE.MeshStandardMaterial({
       color: 0x000000,
@@ -42,49 +42,32 @@ export default function Hero3D() {
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
 
-    /* -------------------------------------------------------
-       🔥 NEW LIGHTING SYSTEM FOR STRONG BEHIND GLOW
-    ------------------------------------------------------- */
-
-    // Cyan glow light behind orb
     const light1 = new THREE.PointLight(0x00ffff, 3.5);
     light1.position.set(6, 6, -4);
-
-    // Violet glow light behind orb
     const light2 = new THREE.PointLight(0x9400d3, 3.5);
     light2.position.set(-6, -6, -4);
-
-    // Soft ambient fill light
     const ambient = new THREE.AmbientLight(0x444444, 0.6);
     scene.add(light1, light2, ambient);
 
-    /* -------------------------------------------------------
-       🔥 SUNRISE-STYLE RADIAL HALO BEHIND ORB
-    ------------------------------------------------------- */
-
-    // Create radial gradient canvas texture
     const canvas = document.createElement("canvas");
     canvas.width = 1024;
     canvas.height = 1024;
     const ctx = canvas.getContext("2d");
 
     const gradient = ctx.createRadialGradient(
-      512, 512, 50,      // inner circle
-      512, 512, 500      // outer circle
+      512, 512, 50,
+      512, 512, 500
     );
 
-   gradient.addColorStop(0, "rgba(245,245,245,0.55)");   // almost-white center
-gradient.addColorStop(0.3, "rgba(200,200,220,0.25)"); // soft icy gray-blue mid
-gradient.addColorStop(1, "rgba(180,180,255,0.1)");     // subtle soft blue outer edge
-
-
+    gradient.addColorStop(0, "rgba(245,245,245,0.55)");
+    gradient.addColorStop(0.3, "rgba(200,200,220,0.25)");
+    gradient.addColorStop(1, "rgba(180,180,255,0.1)");
 
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, 1024, 1024);
 
     const texture = new THREE.CanvasTexture(canvas);
 
-    // Round halo plane behind orb
     const halo = new THREE.Mesh(
       new THREE.PlaneGeometry(18, 18),
       new THREE.MeshBasicMaterial({
@@ -95,10 +78,8 @@ gradient.addColorStop(1, "rgba(180,180,255,0.1)");     // subtle soft blue outer
       })
     );
 
-    halo.position.z = -3.5; // move behind orb
+    halo.position.z = -3.5;
     scene.add(halo);
-
-    /* ------------------------------------------------------- */
 
     camera.position.z = 7;
 
@@ -127,68 +108,81 @@ gradient.addColorStop(1, "rgba(180,180,255,0.1)");     // subtle soft blue outer
     };
   }, []);
 
-  return (
-    <div className="relative flex flex-col items-center justify-center w-full py-20">
-      {/* Background pattern grid */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#e5e7eb_1px,transparent_0)] [background-size:22px_22px] opacity-40 -z-10" />
+  /* ---------------- UI ---------------- */
+  /* ---------------- UI ---------------- */
+return (
+  <section className="relative w-full flex justify-center items-center py-28 bg-white overflow-hidden">
+    
+    <div
+      className="relative w-[1250px] h-[650px] flex flex-row justify-between
+      items-center rounded-[40px] p-12"
+    >
 
-      {/* Soft global glow */}
-      <div className="absolute w-[680px] h-[680px] rounded-full bg-gradient-to-r from-cyan-400/40 via-white/5 to-violet-400/40 blur-[180px] -z-20" />
+      {/* LEFT = 3D ORB */}
+      <div className="flex flex-col items-center justify-center w-[45%] relative translate-x-[-60px]">
 
-      {/* Three.js Orb Container */}
-      <div
-        ref={mountRef}
-        className="h-[480px] w-[480px] md:h-[580px] md:w-[580px] relative"
-      />
+        {/* Three.js canvas */}
+        <div
+          ref={mountRef}
+          className="h-[520px] w-[520px] relative"
+        />
 
-      {/* Orbiting Icons */}
-      {icons.map((item, index) => {
-        const angle = (index / icons.length) * Math.PI * 2;
-        const radius = 180;
+        {/* Orbiting Icons */}
+        {icons.map((item, index) => {
+          const angle = (index / icons.length) * Math.PI * 2;
+          const radius = 200;
 
-        return (
-          <motion.div
-            key={index}
-            className="absolute top-1/2 left-1/2"
-            style={{ x: -24, y: -90 }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
-          >
+          return (
             <motion.div
-              className="flex flex-col items-center"
-              style={{
-                x: radius * Math.cos(angle),
-                y: radius * Math.sin(angle),
-              }}
-              animate={{ rotate: -360 }}
+              key={index}
+              className="absolute top-1/2 left-1/2"
+              style={{ x: -24, y: -50 }}
+              animate={{ rotate: 360 }}
               transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
             >
-              <div className="bg-white/90 backdrop-blur-md rounded-full p-3 shadow-md border border-gray-200">
-                {item.icon}
-              </div>
-              <p className="text-xs md:text-sm text-gray-700 mt-1 font-bold font-sans">
-  {item.label}
-</p>
-
+              <motion.div
+                className="flex flex-col items-center"
+                style={{
+                  x: radius * Math.cos(angle),
+                  y: radius * Math.sin(angle),
+                }}
+                animate={{ rotate: -360 }}
+                transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
+              >
+                <div className="bg-white/90 backdrop-blur-md rounded-full p-3 shadow-md border border-gray-200">
+                  {item.icon}
+                </div>
+                <p className="text-xs md:text-sm text-gray-700 mt-1 font-bold">
+                  {item.label}
+                </p>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        );
-      })}
-
-      {/* Text Section */}
-      <div className="text-center mt-16 px-4">
-        <h1 className="text-5xl md:text-6xl font-extrabold text-black">
-          ORIMIND
-        </h1>
-
-        <p className="text-gray-700 mt-3 text-xl md:text-2xl">
-          One Command. Infinite Execution.
-        </p>
-
-        <p className="mt-4 text-lg md:text-xl font-medium typing-text">
-          Where Ideas Build Themselves.
-        </p>
+          );
+        })}
       </div>
+
+ {/* RIGHT = ORIMIND TEXT SUPER BIG */}
+<div className="flex flex-col justify-center w-[60%] pl-10 pr-10">
+
+  <h1 className="text-[130px] font-extrabold text-black leading-[0.95] tracking-[0.10em]">
+    ORIMIND
+  </h1>
+
+  {/* MOVIE STYLE TAGLINE */}
+  <p className="text-black mt-1 text-5xl font-bold tracking-wide">
+    One Command. Infinite Execution.
+  </p>
+
+  <p className="mt-4 text-3xl font-semibold text-gray-600 italic tracking-tight">
+    Where Ideas Build Themselves.
+  </p>
+
+</div>
+
+
+
     </div>
-  );
+
+  </section>
+);
 }
