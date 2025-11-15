@@ -11,12 +11,13 @@ const ChatbotInterface = () => {
       text: "Welcome! I’m OriBot, your autonomous execution agent. How can I help you today?",
     },
   ]);
+  const [typing, setTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Auto-scroll to bottom
+  // Auto-scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, typing]);
 
   const handleSend = () => {
     const text = input.trim();
@@ -24,13 +25,16 @@ const ChatbotInterface = () => {
 
     setMessages([...messages, { type: "user", text }]);
     setInput("");
+    setTyping(true);
 
+    // Simulate bot response with typing animation
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
         { type: "bot", text: `I am currently processing your request: "${text}".` },
       ]);
-    }, 1000);
+      setTyping(false);
+    }, 1200);
   };
 
   const handleKeyDown = (e) => {
@@ -43,7 +47,15 @@ const ChatbotInterface = () => {
   const ChatMessage = ({ msg }) => {
     const isUser = msg.type === "user";
     return (
-      <div style={{ display: "flex", width: "100%", justifyContent: isUser ? "flex-end" : "flex-start" }}>
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          justifyContent: isUser ? "flex-end" : "flex-start",
+          opacity: 0,
+          animation: "fadeIn 0.5s forwards",
+        }}
+      >
         <div
           style={{
             maxWidth: "80%",
@@ -80,8 +92,8 @@ const ChatbotInterface = () => {
         padding: "32px",
         display: "flex",
         flexDirection: "column",
-        flex: 1, // Allow container to grow naturally
-        minHeight: "calc(100vh - 64px)", // Fill remaining screen height with some padding
+        flex: 1,
+        minHeight: "calc(100vh - 64px)",
         backgroundColor: "#111827",
         border: "1px solid rgba(107, 114, 128, 0.5)",
         boxShadow: "0 0 50px rgba(0,0,0,0.5)",
@@ -102,7 +114,7 @@ const ChatbotInterface = () => {
           Chat with OriBot
         </h2>
         <p style={{ color: "#D1D5DB", fontSize: "0.875rem" }}>
-          Create dashboards and applications just by chatting with AI
+          Your ideas, engineered instantly.
         </p>
       </div>
 
@@ -124,6 +136,29 @@ const ChatbotInterface = () => {
         {messages.map((msg, idx) => (
           <ChatMessage key={idx} msg={msg} />
         ))}
+
+        {/* Typing indicator */}
+        {typing && (
+          <div style={{ display: "flex", justifyContent: "flex-start", padding: "0 8px" }}>
+            <div
+              style={{
+                width: "40px",
+                height: "24px",
+                background: "rgba(55,65,81,0.8)",
+                borderRadius: "16px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "4px",
+              }}
+            >
+              <span className="dot" />
+              <span className="dot" />
+              <span className="dot" />
+            </div>
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -151,7 +186,7 @@ const ChatbotInterface = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Ask OriBot to create a dashboard..."
+          placeholder="Ask your queries..."
           style={{
             flex: 1,
             height: "56px",
@@ -162,6 +197,7 @@ const ChatbotInterface = () => {
             color: "#FFFFFF",
             fontSize: "1rem",
             outline: "none",
+            animation: "pulsePlaceholder 2s infinite",
           }}
         />
 
@@ -187,6 +223,33 @@ const ChatbotInterface = () => {
           ➤
         </button>
       </div>
+
+      {/* Animations */}
+      <style>
+        {`
+          @keyframes fadeIn {
+            to { opacity: 1; }
+          }
+          @keyframes pulsePlaceholder {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+          }
+          .dot {
+            width: 6px;
+            height: 6px;
+            background: #F3F4F6;
+            border-radius: 50%;
+            animation: blink 1.4s infinite both;
+          }
+          .dot:nth-child(2) { animation-delay: 0.2s; }
+          .dot:nth-child(3) { animation-delay: 0.4s; }
+
+          @keyframes blink {
+            0%, 80%, 100% { opacity: 0; }
+            40% { opacity: 1; }
+          }
+        `}
+      </style>
     </div>
   );
 };
@@ -200,9 +263,9 @@ export default function App() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center", // Vertically center container
+        justifyContent: "center",
         backgroundColor: "#0F172A",
-        padding: "32px 16px", // optional spacing for small screens
+        padding: "32px 16px",
       }}
     >
       <ChatbotInterface />

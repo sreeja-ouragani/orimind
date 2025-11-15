@@ -22,6 +22,8 @@ export default function Home() {
       {/* Visionary Section */}
       <VisionarySection />
 
+      
+
       {/* Chatbot Section */}
       <ChatbotSection />
     </main>
