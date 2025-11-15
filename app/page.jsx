@@ -3,7 +3,8 @@
 import Hero3D from "../components/Hero3D";
 import BuildingBlocksSection from "../sections/BuildingBlocksSection";
 import HowItWorksSection from "../sections/HowItWorksSection";
-import VisionarySection from "../sections/VisionarySection";   // <-- Added
+import VisionarySection from "../sections/VisionarySection";
+import ChatbotSection from "../sections/ChatbotSection"; // Correct import
 import "../styles/animations.css";
 
 export default function Home() {
@@ -20,6 +21,9 @@ export default function Home() {
 
       {/* Visionary Section */}
       <VisionarySection />
+
+      {/* Chatbot Section */}
+      <ChatbotSection />
     </main>
   );
 }

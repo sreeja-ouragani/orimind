@@ -15,39 +15,36 @@ const icons = [
 export default function Hero3D() {
   const mountRef = useRef(null);
 
-  /* ---------------- TYPEWRITER EFFECT (CONTINUOUS) ---------------- */
-useEffect(() => {
-  const text = "---- One Command. Infinite Execution----";
-  const element = document.querySelector(".tag-typewriter");
-  if (!element) return;
+  /* ---------------- TYPEWRITER EFFECT ---------------- */
+  useEffect(() => {
+    const text = "---- One Command. Infinite Execution----";
+    const element = document.querySelector(".tag-typewriter");
+    if (!element) return;
 
-  let i = 0;
+    let i = 0;
 
-  function type() {
-    if (i < text.length) {
-      element.textContent += text.charAt(i);
-      i++;
-      setTimeout(type, 55);
-    } else {
-      // After typing finishes, wait a bit, then restart
-      setTimeout(() => {
-        element.textContent = "";
-        i = 0;
-        type();
-      }, 1000); // 1 second pause before restarting
+    function type() {
+      if (i < text.length) {
+        element.textContent += text.charAt(i);
+        i++;
+        setTimeout(type, 55);
+      } else {
+        setTimeout(() => {
+          element.textContent = "";
+          i = 0;
+          type();
+        }, 1000);
+      }
     }
-  }
 
-  setTimeout(type, 1300); // Start after title animation
-}, []);
-
+    setTimeout(type, 1300);
+  }, []);
 
   /* ---------------- THREE JS SETUP ---------------- */
   useEffect(() => {
     if (!mountRef.current) return;
 
     const scene = new THREE.Scene();
-
     const camera = new THREE.PerspectiveCamera(
       75,
       mountRef.current.clientWidth / mountRef.current.clientHeight,
@@ -62,7 +59,6 @@ useEffect(() => {
     );
     mountRef.current.appendChild(renderer.domElement);
 
-    // Core Sphere
     const geometry = new THREE.SphereGeometry(2.5, 64, 64);
     const material = new THREE.MeshStandardMaterial({
       color: 0x000000,
@@ -72,7 +68,6 @@ useEffect(() => {
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
 
-    // Lighting
     const light1 = new THREE.PointLight(0x00ffff, 3.5);
     light1.position.set(6, 6, -4);
 
@@ -82,7 +77,6 @@ useEffect(() => {
     const ambient = new THREE.AmbientLight(0x444444, 0.6);
     scene.add(light1, light2, ambient);
 
-    // Glow Background
     const canvas = document.createElement("canvas");
     canvas.width = 1024;
     canvas.height = 1024;
@@ -113,7 +107,6 @@ useEffect(() => {
 
     camera.position.z = 7;
 
-    // Animation Loop
     const animate = () => {
       sphere.rotation.y += 0.004;
       sphere.rotation.x += 0.002;
@@ -122,7 +115,6 @@ useEffect(() => {
     };
     animate();
 
-    // Resize
     const resizeHandler = () => {
       camera.aspect =
         mountRef.current.clientWidth / mountRef.current.clientHeight;
@@ -143,12 +135,15 @@ useEffect(() => {
     };
   }, []);
 
-  /* ---------------- UI ---------------- */
   return (
     <section className="relative w-full flex justify-center items-center py-28 bg-white overflow-hidden">
+      {/* 🔲 Outer Glowing Black Border */}
       <div
-        className="relative w-[1250px] h-[650px] flex flex-row justify-between
-        items-center rounded-[40px] p-12"
+        className="relative w-[95vw] max-w-[1600px] h-[650px] flex flex-row justify-between items-center rounded-[40px] p-6 bg-white"
+        style={{
+          border: "2px solid #000",
+          boxShadow: "0 0 20px #000, 0 0 40px #000, 0 0 60px #000, 0 0 80px #000",
+        }}
       >
         {/* LEFT = 3D ORB */}
         <div className="flex flex-col items-center justify-center w-[45%] relative translate-x-[-60px]">
@@ -194,8 +189,6 @@ useEffect(() => {
 
         {/* RIGHT = ORIMIND TEXT */}
         <div className="flex flex-col justify-center w-[60%] pl-10">
-
-          {/* Title with animation */}
           <motion.h1
             initial={{ opacity: 0, y: 30, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -205,7 +198,6 @@ useEffect(() => {
             ORIMIND
           </motion.h1>
 
-          {/* Tagline appears after title */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -215,7 +207,6 @@ useEffect(() => {
             <span className="tag-typewriter"></span>
             <span className="tag-cursor">|</span>
           </motion.p>
-
         </div>
       </div>
     </section>
