@@ -1,0 +1,22 @@
+/* Fast Typewriter Text */
+.tag-typewriter {
+  font-family: "Poppins", sans-serif;
+  white-space: nowrap;
+  display: inline-block;
+  overflow: hidden;
+  font-weight: 600;
+}
+
+/* Blinking Cursor */
+.tag-cursor {
+  display: inline-block;
+  font-weight: 900;
+  margin-left: 4px;
+  animation: blink 0.6s infinite;
+}
+
+/* Cursor Blink */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
