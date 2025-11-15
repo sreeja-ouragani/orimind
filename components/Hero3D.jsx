@@ -31,7 +31,7 @@ export default function Hero3D() {
       }
     }
 
-    setTimeout(type, 500);
+    setTimeout(type, 1300); // Start AFTER title animation
   }, []);
 
   /* ---------------- THREE JS SETUP ---------------- */
@@ -185,21 +185,30 @@ export default function Hero3D() {
         </div>
 
         {/* RIGHT = ORIMIND TEXT */}
-<div className="flex flex-col justify-center w-[60%] pl-10">
+        <div className="flex flex-col justify-center w-[60%] pl-10">
 
-  {/* Title */}
-  <h1 className="text-[130px] font-extrabold text-black leading-[0.85] tracking-[0.08em] mb-[-10px]">
-    ORIMIND
-  </h1>
+          {/* Title with animation */}
+          <motion.h1
+            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-[130px] font-extrabold text-black leading-[0.85] tracking-[0.08em] mb-[-5px]"
+          >
+            ORIMIND
+          </motion.h1>
 
-  {/* Tagline */}
-  <p className="text-[30px] font-semibold text-gray-800 mt-2 flex items-center leading-none">
-    <span className="tag-typewriter"></span>
-    <span className="tag-cursor">|</span>
-  </p>
+          {/* Tagline appears after title */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8, duration: 0.3 }}
+            className="text-[30px] font-semibold text-gray-800 mt-1 flex items-center leading-none"
+          >
+            <span className="tag-typewriter"></span>
+            <span className="tag-cursor">|</span>
+          </motion.p>
 
-</div>
-
+        </div>
       </div>
     </section>
   );
