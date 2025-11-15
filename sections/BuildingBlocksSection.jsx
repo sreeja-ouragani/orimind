@@ -20,12 +20,12 @@ const SectionTitle = ({ title }) => (
 // Card component (each block)
 const Card = ({ name, animation, description, idx }) => (
   <motion.div
-    className="block-card"
+    // Re-introducing the hover cursor for feedback
+    className="block-card group"
     initial={{ opacity: 0, y: 50 }}
     whileInView={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.8, delay: idx * 0.2 }}
   >
-    {/* FIXED: Corrected typo in closing tag from </GowBox> to </GlowBox> */}
     <GlowBox>{animation}</GlowBox>
     <h3 className="block-name">{name}</h3>
     <p className="block-desc">{description}</p>
@@ -60,15 +60,14 @@ const blocks = [
   },
   {
     name: "Pipeline",
-    // INCREASED ARROW SIZE HERE
     animation: <ArrowRight size={48} className="pipeline-animation" />,
     description: "Glowing horizontal flow line.",
   },
 ];
 
 const BuildingBlocksSection = () => {
-  // Define a consistent bright color for Pipeline/Transparency flash
-  const BRIGHT_CYAN = '#00CFFF'; 
+  // Define a consistent bright color for the hover flash and pipeline effect
+  const BRIGHT_CYAN = '#00CFFF';
   
   const styleContent = `
     /* Section Background */
@@ -95,27 +94,24 @@ const BuildingBlocksSection = () => {
     /* Container for cards - USING FR (FLEXIBLE UNITS) FOR PERFECT SPACING */
     .blocks-container {
       display: grid;
-      /* Define 3 equal columns that share space, ensuring even gaps */
       grid-template-columns: repeat(3, 1fr);
-      gap: 40px; /* Consistent gap between all cards horizontally and vertically */
+      gap: 40px; 
       margin-top: 40px; 
       justify-content: center;
       position: relative;
       z-index: 10;
-      /* Max width controls how wide the 3-column grid can get, ensuring a clean presentation */
       max-width: 900px;
-      width: 100%; /* Important for grid to fill max-width */
-      padding: 0 20px; /* Add slight padding for smaller desktop views */
+      width: 100%; 
+      padding: 0 20px; 
       box-sizing: border-box;
     }
 
-    /* Individual Block Card - Removed fixed width so it can flex with 1fr columns */
+    /* Individual Block Card */
     .block-card {
       background: #000000;
       border-radius: 24px;
       padding: 30px;
-      /* Removed fixed width (180px) so it fills the 1fr column */
-      min-width: 150px; /* Ensure cards don't get too narrow */
+      min-width: 150px; 
       height: 220px;
       display: flex;
       flex-direction: column;
@@ -124,13 +120,75 @@ const BuildingBlocksSection = () => {
       border: 2px solid rgba(255, 255, 255, 0.3);
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
       text-align: center;
-      position: relative;
-      transition: transform 0.3s ease-out;
+      cursor: pointer; /* Added cursor pointer */
+      
+      /* Base styles for the sweep effect */
+      position: relative; 
+      overflow: hidden; /* CRUCIAL: Clips the large rotating pseudo-element */
+      
+      /* Re-added transform to the transition list */
+      transition: transform 0.3s ease-out, border-color 0.3s, box-shadow 0.3s;
     }
 
+    /* --- HOVER ANIMATION: LIFT AND SCALE (Increased Effect) --- */
     .block-card:hover {
-      transform: scale(1.05);
+      /* INCREASED LIFT: -5px to -10px */
+      /* INCREASED SCALE: 1.05 to 1.08 */
+      transform: translateY(-10px) scale(1.08); 
+      border-color: ${BRIGHT_CYAN}; 
+      /* Enhanced shadow for a bigger 'pop' */
+      box-shadow: 0 15px 40px rgba(0, 207, 255, 0.4), 0 0 30px rgba(0, 207, 255, 0.5);
     }
+
+    /* --- CONTINUOUS NEON BORDER FLOW EFFECT (ALWAYS ON) --- */
+
+    /* 1. The Light Source (Pseudo-element) - Always visible */
+    .block-card::before {
+      content: "";
+      position: absolute;
+      
+      /* Make it huge to cover the whole card and extend well beyond the border */
+      width: 300%; 
+      height: 300%;
+      top: -100%;
+      left: -100%;
+      border-radius: 50%; /* Ensures smooth, continuous rotation */
+      
+      /* Use a conic gradient to define the light segment */
+      background: conic-gradient(
+        transparent 0deg,
+        transparent 160deg,
+        ${BRIGHT_CYAN} 180deg, /* The bright spot */
+        transparent 200deg,
+        transparent 360deg
+      );
+      
+      /* Set the light behind the card's content */
+      z-index: 1; 
+      
+      /* Apply heavy blur for the neon glow look */
+      filter: blur(30px); 
+      opacity: 0.8; 
+      pointer-events: none;
+      
+      /* Start the continuous rotation animation (ALWAYS ON) */
+      animation: border-sweep 4s linear infinite;
+    }
+
+    /* 2. Ensure all content (GlowBox, h3, p) is layered above the light */
+    .block-card > * {
+      position: relative;
+      z-index: 5; 
+    }
+
+    /* 3. Define the Rotation Keyframe */
+    @keyframes border-sweep {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* --- END NEON BORDER FLOW EFFECT --- */
+
 
     /* Card Text */
     .block-name {
@@ -192,11 +250,9 @@ const BuildingBlocksSection = () => {
       color: #fff;
     }
     .transparency-animation {
-      /* Applying the new, smoother pulse */
       animation: transparencyPulse 2.5s ease-in-out infinite; 
     }
     .pipeline-animation {
-      /* Set base color and use glowFlow for the moving shadow effect */
       color: ${BRIGHT_CYAN};
       animation: glowFlow 2s infinite;
     }
@@ -223,32 +279,31 @@ const BuildingBlocksSection = () => {
     @keyframes transparencyPulse { 
       0% { 
         color: #fff; 
-        filter: drop-shadow(0 0 0px rgba(0, 207, 255, 0)); /* Start with no shadow/white */
+        filter: drop-shadow(0 0 0px rgba(0, 207, 255, 0)); 
       }
       50% { 
-        /* Full glow effect in cyan */
         color: ${BRIGHT_CYAN}; 
-        filter: drop-shadow(0 0 15px ${BRIGHT_CYAN}); /* Stronger, defined glow */
+        filter: drop-shadow(0 0 15px ${BRIGHT_CYAN}); 
       }
       100% {
         color: #fff; 
-        filter: drop-shadow(0 0 0px rgba(0, 207, 255, 0)); /* Return to white, ready for next pulse */
+        filter: drop-shadow(0 0 0px rgba(0, 207, 255, 0)); 
       }
     }
     
-    /* Pipeline Glow Flow (using brighter color and text-shadow for flow effect) */
+    /* Pipeline Glow Flow */
     @keyframes glowFlow {
       0% { 
         text-shadow: 0 0 4px ${BRIGHT_CYAN}; 
-        filter: drop-shadow(-2px 0 4px ${BRIGHT_CYAN}); /* Light starting left */
+        filter: drop-shadow(-2px 0 4px ${BRIGHT_CYAN}); 
       } 
       50% { 
         text-shadow: 0 0 16px ${BRIGHT_CYAN}; 
-        filter: drop-shadow(2px 0 4px ${BRIGHT_CYAN}); /* Light moving right */
+        filter: drop-shadow(2px 0 4px ${BRIGHT_CYAN}); 
       }
       100% { 
         text-shadow: 0 0 4px ${BRIGHT_CYAN}; 
-        filter: drop-shadow(-2px 0 4px ${BRIGHT_CYAN}); /* Light returning left */
+        filter: drop-shadow(-2px 0 4px ${BRIGHT_CYAN}); 
       }
     }
 
@@ -257,7 +312,6 @@ const BuildingBlocksSection = () => {
     /* Tablet/Mid-Screen: Drop to 2 columns */
     @media (max-width: 750px) {
         .blocks-container {
-            /* Now uses 2 equal columns */
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
         }
@@ -266,7 +320,6 @@ const BuildingBlocksSection = () => {
     /* Mobile: Drop to 1 column */
     @media (max-width: 500px) {
         .blocks-container {
-            /* 1 full-width column */
             grid-template-columns: 1fr;
             padding: 0 10px;
         }

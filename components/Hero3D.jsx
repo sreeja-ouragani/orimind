@@ -15,24 +15,32 @@ const icons = [
 export default function Hero3D() {
   const mountRef = useRef(null);
 
-  /* ---------------- TYPEWRITER EFFECT ---------------- */
-  useEffect(() => {
-    const text = "---- One Command. Infinite Execution----";
-    const element = document.querySelector(".tag-typewriter");
-    if (!element) return;
+  /* ---------------- TYPEWRITER EFFECT (CONTINUOUS) ---------------- */
+useEffect(() => {
+  const text = "---- One Command. Infinite Execution----";
+  const element = document.querySelector(".tag-typewriter");
+  if (!element) return;
 
-    let i = 0;
+  let i = 0;
 
-    function type() {
-      if (i < text.length) {
-        element.textContent += text.charAt(i);
-        i++;
-        setTimeout(type, 55); // FAST typing
-      }
+  function type() {
+    if (i < text.length) {
+      element.textContent += text.charAt(i);
+      i++;
+      setTimeout(type, 55);
+    } else {
+      // After typing finishes, wait a bit, then restart
+      setTimeout(() => {
+        element.textContent = "";
+        i = 0;
+        type();
+      }, 1000); // 1 second pause before restarting
     }
+  }
 
-    setTimeout(type, 1300); // Start AFTER title animation
-  }, []);
+  setTimeout(type, 1300); // Start after title animation
+}, []);
+
 
   /* ---------------- THREE JS SETUP ---------------- */
   useEffect(() => {
